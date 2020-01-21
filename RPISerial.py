@@ -3,7 +3,7 @@ import time
 
 def initserial():
     global ser
-    ser = serial.Serial('COM10', 9600, timeout=2)
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=2)
 
 def readfromserial():
     line = ser.readlines()
