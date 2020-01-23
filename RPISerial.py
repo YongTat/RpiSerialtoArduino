@@ -1,17 +1,23 @@
 import serial
 import time
 
-ser = serial.Serial('COM10', 9600, timeout=2)
-print(ser.name)
+def initserial():
+    global ser
+    ser = serial.Serial('COM10', 9600, timeout=2)
 
-line = ser.readlines()
-print(line)
+def readfromserial():
+    line = ser.readlines()
+    print(line)
 
-string1 = "3\n"
+def writetoserial(stringwrite):
+    newstringwrite = stringwrite + "\n"
+    ser.write(newstringwrite.encode())
 
-ser.write(string1.encode())
+def main():
+    initserial()
+    readfromserial()
+    writetoserial("3")
+    readfromserial()
 
-line = ser.readlines()
-print(line)
-
-quit()
+if __name__ == "__main__":
+    main()
