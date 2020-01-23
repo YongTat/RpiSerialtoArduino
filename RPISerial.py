@@ -16,7 +16,8 @@ def writetoserial(stringwrite):
 def main():
     initserial()
     readfromserial()
-    writetoserial("3")
+    scannerin = input("Scan: ")
+    writetoserial(scannerin)
     readfromserial()
 
 if __name__ == "__main__":
