@@ -17,7 +17,7 @@ def main():
     initserial()
     readfromserial()
     scannerin = input("Scan: ")
-    writetoserial(scannerin)
+    writetoserial(str(scannerin))
     readfromserial()
 
 if __name__ == "__main__":
