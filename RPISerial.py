@@ -1,9 +1,18 @@
 import serial
+import serial.tools.list_ports as lp
 import time
 
 def initserial():
     global ser
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=2)
+    ser = serial.Serial()
+    ser.baudrate = 9600
+    ser.timeout = 2
+    ports = lp.comports(include_links=False)
+    for port in ports:
+        print(port.device)
+        print(port.name)
+        print(port.description)
+        print(port.hwid)
 
 def readfromserial():
     line = ser.readlines()
@@ -22,19 +31,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-Code to Test
-    For windows only
-    ser.serial.Serial()
-    ser.baudrate = 9600
-    ports = serial.tools.list_ports.comports(include_links=False)
-    for port in ports :
-        print(port.device)
-        ser.port = port.device
-        try:
-            ser.is_open()
-        except:
-            continue
-
-"""
