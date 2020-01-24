@@ -22,3 +22,19 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+Code to Test
+    For windows only
+    ser.serial.Serial()
+    ser.baudrate = 9600
+    ports = serial.tools.list_ports.comports(include_links=False)
+    for port in ports :
+        print(port.device)
+        ser.port = port.device
+        try:
+            ser.is_open()
+        except:
+            continue
+
+"""
