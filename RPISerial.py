@@ -10,9 +10,12 @@ def initserial():
     ports = lp.comports(include_links=False)
     for port in ports:
         print(port.device)
-        print(port.name)
-        print(port.description)
-        print(port.hwid)
+        print(port.manufacturer)
+	manufacturer = port.manufacturer
+	if "arduino" in manufacturer.lower():
+		ser.port = port.device
+		break
+    ser.open()
 
 def readfromserial():
     line = ser.readlines()
