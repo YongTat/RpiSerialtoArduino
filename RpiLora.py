@@ -1,5 +1,5 @@
-from SX127x.LoRa import *
-from SX127x.board_config import BOARD
+# from SX127x.LoRa import *
+# from SX127x.board_config import BOARD
 import time
 
 """
@@ -24,10 +24,14 @@ def lorainit():
 Converts a string into a ascii list for sending over lora
 """
 def stringtoascii(stringlist):
+    finalstring = []
     asciistring = []
-    for s in stringlist:
-        asciistring.append(ord(s))
-    return asciistring
+    for item in stringlist:
+        for s in str(item):
+            asciistring.append(ord(str(s)))
+        finalstring.append(asciistring)
+        asciistring = []
+    return finalstring
 
 def sender(asciiin):
     lora.write_payload([asciiin])
@@ -39,9 +43,10 @@ def main():
     scannerin = input("Scanner Input")
     pickinglist = inittester(scannerin)
     asciipickinglist = stringtoascii(pickinglist)
+    print(asciipickinglist)
     for item in asciipickinglist:
         sender(item)
-        time.sleep(1000)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
