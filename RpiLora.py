@@ -23,14 +23,14 @@ def lorainit():
 """
 Converts a string into a ascii list for sending over lora
 """
-def stringtoascii(string):
+def stringtoascii(stringlist):
     asciistring = []
-    for s in string:
+    for s in stringlist:
         asciistring.append(ord(s))
     return asciistring
 
-def sender(asciilist):
-    lora.write_payload([asciilist])
+def sender(asciiin):
+    lora.write_payload([asciiin])
     lora.set_mode(MODE.TX) 
     lora.set_mode(MODE.RXCONT)
 
@@ -38,8 +38,8 @@ def main():
     lorainit()
     scannerin = input("Scanner Input")
     pickinglist = inittester(scannerin)
-    pickinglistascii = stringtoascii(pickinglist)
-    for item in pickinglistascii:
+    asciipickinglist = stringtoascii(pickinglist)
+    for item in asciipickinglist:
         sender(item)
         time.sleep(1000)
 
