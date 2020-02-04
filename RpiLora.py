@@ -35,19 +35,20 @@ def stringtoascii(stringlist):
 
 def sender(asciiin):
     lora.write_payload(asciiin)
-    lora.set_mode(MODE.TX) 
-    lora.set_mode(MODE.RXCONT)
+    lora.set_mode(MODE.TX) #send mode
+    lora.set_mode(MODE.RXCONT) #recieve mode
+
+def reciever():
+    payload = lora.read_payload(nocheck=True)
+    print ("Receive: ")
+    print(bytes(payload).decode("utf-8",'ignore')) # Receive DATA
 
 def main():
     lorainit()
     scannerin = input("Scanner Input")
-    pickinglist = inittester(scannerin)
-    print(pickinglist)
-    asciipickinglist = stringtoascii(pickinglist)
-    print(asciipickinglist)
-    for item in asciipickinglist:
-        sender(item)
-        time.sleep(4)
+    sender([scannerin])
+    # Test recieve
+    #reciever()
 
 
 if __name__ == "__main__":
