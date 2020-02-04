@@ -21,7 +21,8 @@ def lorainit():
     lora.set_freq(915.0) #set to 915MHz for SG use
 
 """
-Converts a string into a ascii list for sending over lora
+Takes in a list in the format [data, data, data, ...] and converts
+to [[asciidata], [asciidata], [asciidata]].
 """
 def stringtoascii(stringlist):
     finalstring = []
@@ -33,22 +34,38 @@ def stringtoascii(stringlist):
         asciistring = []
     return finalstring
 
+"""
+Takes in a list in the format [asciidata, asciidata, asciidata, ... ,10] and converts it back to string(needs testing)
+"""
+def asciitostring(asciilist):
+    removenl = asciilist.pop #removes the 10 from the tail
+    finalstr = ""
+    for item in removenl:
+        finalstr += str(chr(item))
+    return finalstr
+
+
+"""
+Takes in data in the format of [asciidata] and sends it thru lora
+"""
 def sender(asciiin):
     lora.write_payload(asciiin)
     lora.set_mode(MODE.TX) #send mode
     lora.set_mode(MODE.RXCONT) #recieve mode
 
+"""
+Recieves data from lora in the format [asciidata, asciidata, asciidata, ... ,10] 10 is the ascii
+for new line
+"""
 def reciever():
+    lora.set_mode(MODE.RXCONT) #Switch to recieve mode
     payload = lora.read_payload(nocheck=True)
     print ("Receive: ")
     print(bytes(payload).decode("utf-8",'ignore')) # Receive DATA
+    return(bytes(payload).decode("utf-8",'ignore'))
 
 def main():
     lorainit()
-    scannerin = input("Scanner Input")
-    sender([scannerin])
-    # Test recieve
-    #reciever()
 
 
 if __name__ == "__main__":
