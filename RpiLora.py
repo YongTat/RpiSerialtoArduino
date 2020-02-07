@@ -66,6 +66,22 @@ def reciever():
 
 def main():
     lorainit()
+    while True:
+        # grabs input from scanner and prepares to send instructions over lora
+        scannerin = input("Scannerinput")
+        asciiinput = stringtoascii(scannerin)
+        for item in asciiinput:
+            sender(item)
+            cfmflag = False
+            # waits for confirm recieve
+            while not cfmflag:
+                dataget = reciever()
+                cleaneddataget = asciitostring(dataget)
+                if cleaneddataget == "CFM":
+                    cfmflag = True
+                else:
+                    pass
+
 
 
 if __name__ == "__main__":
