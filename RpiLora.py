@@ -3,7 +3,7 @@ from SX127x.board_config import BOARD
 import time
 
 """
-A function to simulate picking list from server
+A function to simulate picking list from server, might change if using django frontend?
 """
 def inittester(scannerin):
     zerotoend = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
@@ -60,8 +60,8 @@ for new line
 def reciever():
     lora.set_mode(MODE.RXCONT) #Switch to recieve mode
     payload = lora.read_payload(nocheck=True)
-    print ("Receive: ")
-    print(bytes(payload).decode("utf-8",'ignore')) # Receive DATA
+    #print ("Receive: ")
+    #print(bytes(payload).decode("utf-8",'ignore')) # Receive DATA
     return(bytes(payload).decode("utf-8",'ignore'))
 
 def main():
