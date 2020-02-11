@@ -69,7 +69,7 @@ def main():
     while True:
         # grabs input from scanner and prepares to send instructions over lora
         scannerin = input("Scannerinput")
-        asciiinput = stringtoascii(scannerin)
+        asciiinput = stringtoascii([scannerin])
         for item in asciiinput:
             sender(item)
             cfmflag = False
