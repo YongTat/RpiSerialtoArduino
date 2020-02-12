@@ -76,10 +76,14 @@ def main():
             # waits for confirm recieve
             while not cfmflag:
                 dataget = reciever()
-                cleaneddataget = asciitostring(dataget)
-                if cleaneddataget == "CFM":
-                    cfmflag = True
-                else:
+                try:
+                    #Catch error for no data in
+                    cleaneddataget = asciitostring(dataget)
+                    if cleaneddataget == "CFM":
+                        cfmflag = True
+                    else:
+                        pass
+                except:
                     pass
 
 
