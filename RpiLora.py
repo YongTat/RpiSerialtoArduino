@@ -90,3 +90,29 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+
+Pseudo Code
+
+Input command
+
+<DeviceName>LED
+
+Device LED lights up and sends LED True Signal
+
+<DeviceName>Temp
+
+Gets Temp
+
+<DeviceName>Humid
+
+Gets Humidity
+
+|| run in parallel(?)
+
+Needs device lists
+
+Every min ask device for analouge readings
+
+"""
