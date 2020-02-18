@@ -1,6 +1,7 @@
 from SX127x.LoRa import *
 from SX127x.board_config import BOARD
 import time
+import sys
 
 """
 A function to simulate picking list from server, might change if using django frontend?
@@ -67,30 +68,31 @@ def reciever():
 
 def main():
     lorainit()
-    while True:
-        # grabs input from scanner and prepares to send instructions over lora
-        scannerin = input("Scannerinput")
-        asciiinput = stringtoascii([scannerin])
-        for item in asciiinput:
-            cfmflag = False
-            sendcount = 0
-            while (cfmflag == False):
-                sender(item)
-                if (sendcount > 1):
-                    #add fail detection here
+    # grabs input from scanner and prepares to send instructions over lora
+    #Node Red Input
+    scannerin = sys.argv[1]
+    #scannerin = input("Scannerinput")
+    asciiinput = stringtoascii([scannerin])
+    for item in asciiinput:
+        cfmflag = False
+        sendcount = 0
+        while (cfmflag == False):
+            sender(item)
+            if (sendcount > 1):
+                #add fail detection here
+                break
+            timeout = int(time.time()) + 1
+            # waits for confirm recieve
+            while (int(time.time()) != timeout):
+                dataget = reciever()
+                if str(dataget) == scannerin[0:2]:
+                    cfmflag = True
                     break
-                timeout = int(time.time()) + 1
-                # waits for confirm recieve
-                while (int(time.time()) != timeout):
-                    dataget = reciever()
-                    if str(dataget) == scannerin[0:2]:
-                        cfmflag = True
-                        break
-                    else:
-                        time.sleep(0.1)
-                if (not cfmflag):
-                    sender(item)
-                    sendcount += 1
+                else:
+                    time.sleep(0.1)
+            if (not cfmflag):
+                sender(item)
+                sendcount += 1
                 
 
 
