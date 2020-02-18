@@ -51,6 +51,7 @@ Takes in data in the format of [asciidata] and sends it thru lora
 def sender(asciiin):
     lora.write_payload(asciiin)
     lora.set_mode(MODE.TX) #send mode
+    lora.reset_ptr_rx()
     lora.set_mode(MODE.RXCONT) #recieve mode
 
 """
@@ -74,18 +75,18 @@ def main():
             sender(item)
             cfmflag = False
             # waits for confirm recieve
-            while not cfmflag:
+            while (cfmflag == False):
                 dataget = reciever()
+                print(dataget)
                 try:
-                    #Catch error for no data in
-                    cleaneddataget = asciitostring(dataget)
-                    print(cleaneddataget)
-                    if cleaneddataget == "scannerin":
+                    if str(dataget) == scannerin:
                         cfmflag = True
                     else:
                         pass
                 except:
-                    pass
+                    print("read failed")
+                    time.sleep(1)
+                    sender(item)
 
 
 
