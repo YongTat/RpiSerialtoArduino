@@ -57,23 +57,12 @@ void loop() {
           incomingString += (char)LoRa.read();
         }
         Serial.println(incomingString);
-        leds[incomingString.toInt()-1]= CRGB::Red;
-        FastLED.show();
-        delay(3000);
-        leds[incomingString.toInt()-1]= CRGB::Black;
-        FastLED.show();
+        
         mode = 1;
       }
       break;
     }
     case 1: {
-      while (counter < 3) {
-        Serial.println("Sending Confirm ");
-        LoRa.beginPacket();
-        LoRa.print(incomingString);
-        LoRa.endPacket();
-        counter++;
-      }
       incomingString = "";
       counter = 0;
       mode = 0;

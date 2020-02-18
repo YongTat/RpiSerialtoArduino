@@ -79,7 +79,8 @@ def main():
                 try:
                     #Catch error for no data in
                     cleaneddataget = asciitostring(dataget)
-                    if cleaneddataget == "CFM":
+                    print(cleaneddataget)
+                    if cleaneddataget == "scannerin":
                         cfmflag = True
                     else:
                         pass

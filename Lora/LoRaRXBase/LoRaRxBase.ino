@@ -29,10 +29,10 @@
 #include <SPI.h>
 #include <LoRa.h>
 
-String NodeName = "<NodeNamehere>"
+String NodeName = "A1";
 String incomingString = "";
 int mode = 0;
-bool ledstate = False;
+bool ledstate = false;
 const int NUM_LEDS = 1;
 CRGB leds[NUM_LEDS];
 
@@ -59,7 +59,7 @@ void loop() {
         }
         Serial.println(incomingString);
         if (incomingString == NodeName){
-          if (ledstate == False){
+          if (ledstate == false){
             leds[incomingString.toInt()-1]= CRGB::Red;
             FastLED.show();
           }
@@ -67,19 +67,20 @@ void loop() {
             leds[incomingString.toInt()-1]= CRGB::Black;
             FastLED.show();
           }
-        mode = 1;
+          mode = 1;
+        }
       }
       break;
     }
     case 1: {
       Serial.println("Sending Confirm ");
       LoRa.beginPacket();
-      LoRa.print("CFM");
+      LoRa.print(NodeName);
       LoRa.endPacket();
       incomingString = "";
       mode = 0;
       break;
     }
-  delay(1);
   }
+  delay(1);
 }
