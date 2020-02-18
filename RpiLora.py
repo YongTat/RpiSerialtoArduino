@@ -72,22 +72,26 @@ def main():
         scannerin = input("Scannerinput")
         asciiinput = stringtoascii([scannerin])
         for item in asciiinput:
-            sender(item)
             cfmflag = False
-            # waits for confirm recieve
+            sendcount = 0
             while (cfmflag == False):
-                dataget = reciever()
-                print(dataget)
-                try:
-                    if str(dataget) == scannerin:
+                sender(item)
+                if (sendcount > 1):
+                    #add fail detection here
+                    break
+                timeout = int(time.time()) + 1
+                # waits for confirm recieve
+                while (int(time.time()) != timeout):
+                    dataget = reciever()
+                    if str(dataget) == scannerin[0:2]:
                         cfmflag = True
+                        break
                     else:
-                        pass
-                except:
-                    print("read failed")
-                    time.sleep(1)
+                        time.sleep(0.1)
+                if (not cfmflag):
                     sender(item)
-
+                    sendcount += 1
+                
 
 
 if __name__ == "__main__":
