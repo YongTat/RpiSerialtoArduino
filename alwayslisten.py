@@ -1,5 +1,6 @@
 from SX127x.LoRa import *
 from SX127x.board_config import BOARD
+import time
 
 def lorainit():
     global lora
@@ -21,6 +22,7 @@ def main():
     lorainit()
     while True:
         alwayslisten()
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     main()
