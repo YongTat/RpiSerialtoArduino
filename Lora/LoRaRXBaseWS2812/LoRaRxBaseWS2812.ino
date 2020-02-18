@@ -29,7 +29,7 @@
 #include <SPI.h>
 #include <LoRa.h>
 
-String NodeName = "A1";
+String NodeName = "A2";
 String incomingString = "";
 int mode = 0;
 int ledstate = 0;
@@ -45,7 +45,7 @@ void setup() {
     Serial.println("Starting LoRa failed!");
     while (1);
   }
-  FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS);
+  FastLED.addLeds<WS2812, 5, BRG>(leds, NUM_LEDS);
 }
 
 void loop() {
