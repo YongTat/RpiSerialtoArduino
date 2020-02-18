@@ -1,7 +1,7 @@
 from SX127x.LoRa import *
 from SX127x.board_config import BOARD
 import time
-
+import sys
 """
 A function to simulate picking list from server, might change if using django frontend?
 """
@@ -68,6 +68,9 @@ def reciever():
 def main():
     lorainit()
     while True:
+        #Node Red Scanner in
+        #scannerin = sys.argv[1]
+
         # grabs input from scanner and prepares to send instructions over lora
         scannerin = input("Scannerinput")
         asciiinput = stringtoascii([scannerin])
@@ -89,7 +92,6 @@ def main():
                     else:
                         time.sleep(0.1)
                 if (not cfmflag):
-                    sender(item)
                     sendcount += 1
                 
 
