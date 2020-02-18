@@ -1,6 +1,14 @@
 from SX127x.LoRa import *
 from SX127x.board_config import BOARD
 
+def lorainit():
+    global lora
+
+    BOARD.setup()
+    lora = LoRa()
+    lora.set_mode(MODE.STDBY)
+    lora.set_freq(915.0) #set to 915MHz for SG use
+
 """
 Always listens and prints out packets
 """
@@ -10,6 +18,7 @@ def alwayslisten():
     print(bytes(payload).decode("utf-8",'ignore'))
 
 def main():
+    lorainit()
     while True:
         alwayslisten()
 
