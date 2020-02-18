@@ -25,7 +25,7 @@
 #include <pixeltypes.h>
 #include <platforms.h>
 #include <power_mgt.h>
-
+#include <EduIntro.h>
 #include <SPI.h>
 #include <LoRa.h>
 
@@ -35,6 +35,11 @@ int mode = 0;
 int ledstate = 0;
 const int NUM_LEDS = 30;
 CRGB leds[NUM_LEDS];
+DHT11 dht11(D4);
+int C;
+int H;
+int counter = 0;
+int randsendback = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -46,9 +51,26 @@ void setup() {
     while (1);
   }
   FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS);
+  randsendback = random(60000, 90000);
 }
 
 void loop() {
+  //main counter for sensor data relay
+  if (counter == randsendback){
+    dht11.update();
+    C = dht11.readCelsius();
+    H = dht11.readHumidity();
+    LoRa.beginPacket();
+    LoRa.print(C);
+    LoRa.print(H);
+    LoRa.endPacket();
+    counter = 0;
+    randsendback = random(60000, 90000);
+  }
+  else{
+    counter++;
+  }
+  //switch case for data from Rpi
   switch (mode){
     case 0: {
       int packetSize = LoRa.parsePacket();
