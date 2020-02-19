@@ -6,7 +6,7 @@ def lorainit():
     global lora
 
     BOARD.setup()
-    lora = LoRa()
+    lora = LoRa(verbose=False)
     lora.set_mode(MODE.STDBY)
     lora.set_freq(915.0) #set to 915MHz for SG use
 
@@ -14,8 +14,13 @@ def main():
     lorainit()
     lora.set_mode(MODE.RXCONT) #Switch to recieve modes
     while True:
-        if (payload = lora.read_payload(nocheck=True)):
+        payload = lora.read_payload(nocheck=True)
+        if (payload != []):
             print(bytes(payload).decode("utf-8",'ignore'))
+            payload = []
+            lora.set_mode(MODE.SLEEP)
+            lora.reset_ptr_rx()
+            lora.set_mode(MODE.RXCONT)
         time.sleep(0.1)
 
 if __name__ == "__main__":
