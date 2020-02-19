@@ -1,6 +1,7 @@
 from SX127x.LoRa import *
 from SX127x.board_config import BOARD
 import time
+import requests
 
 def lorainit():
     global lora
@@ -16,7 +17,13 @@ def main():
     while True:
         payload = lora.read_payload(nocheck=True)
         if (payload != []):
-            print(bytes(payload).decode("utf-8",'ignore'))
+            text = str(bytes(payload).decode("utf-8",'ignore'))
+            payload = {
+                "Name": text[0:2],
+                "Temp": text[2:4],
+                "Humidity": text[4:6]
+            }
+            r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
             payload = []
             lora.set_mode(MODE.SLEEP)
             lora.reset_ptr_rx()

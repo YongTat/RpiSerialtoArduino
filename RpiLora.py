@@ -67,7 +67,7 @@ def reciever():
     lora.set_mode(MODE.SLEEP)
     lora.reset_ptr_rx()
     lora.set_mode(MODE.RXCONT)
-    return(text)
+    return(str(text))
 
 def main():
     lorainit()
@@ -88,8 +88,13 @@ def main():
             # waits for confirm recieve
             while (int(time.time()) != timeout):
                 dataget = reciever()
-                if str(dataget) == scannerin[0:2]:
+                if dataget[0:2] == scannerin[0:2]:
                     #add post request here
+                    payload = {
+                        "Name": scannerin[0:2],
+                        "Data": dataget[2:3]
+                    }
+                    r = requests.post("http://192.168.137.142:1880/LEDin", data=payload)
                     cfmflag = True
                     break
                 else:

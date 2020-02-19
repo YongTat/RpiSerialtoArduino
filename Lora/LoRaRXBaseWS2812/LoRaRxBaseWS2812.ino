@@ -107,6 +107,7 @@ void loop() {
       Serial.println("Sending Confirm ");
       LoRa.beginPacket();
       LoRa.print(NodeName);
+      LoRa.print(ledstate);
       LoRa.endPacket();
       incomingString = "";
       mode = 0;
