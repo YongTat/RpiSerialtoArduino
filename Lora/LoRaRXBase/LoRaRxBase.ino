@@ -51,23 +51,25 @@ void setup() {
     while (1);
   }
   FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS);
-  randsendback = random(6000, 9000);
+  randsendback = random(60000, 90000);
 }
 
 void loop() {
   //main counter for sensor data relay
   if (counter == randsendback){
     dht11.update();
-    C = dht11.readCelsius() + "C";
-    H = dht11.readHumidity() + "%";
+    C = dht11.readCelsius();
+    H = dht11.readHumidity();
     LoRa.beginPacket();
     LoRa.print(NodeName);
     LoRa.print("NS");
     LoRa.print(C);
+    LoRa.print("C");
     LoRa.print(H);
+    LoRa.print("%");
     LoRa.endPacket();
     counter = 0;
-    randsendback = random(6000, 9000);
+    randsendback = random(60000, 90000);
   }
   else{
     counter++;

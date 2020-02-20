@@ -29,7 +29,7 @@
 #include <SPI.h>
 #include <LoRa.h>
 
-String NodeName = "A2";
+String NodeName = "A4";
 String incomingString = "";
 int mode = 0;
 int ledstate = 0;
@@ -38,8 +38,8 @@ CRGB leds[NUM_LEDS];
 DHT11 dht11(D4);
 int C;
 int H;
-int counter = 0;
-int randsendback = 0;
+long counter = 0;
+long randsendback = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -51,7 +51,8 @@ void setup() {
     while (1);
   }
   FastLED.addLeds<WS2812, 5, BRG>(leds, NUM_LEDS);
-  randsendback = random(6000, 9000);
+  randsendback = random(60000, 90000);
+  Serial.println(randsendback);
 }
 
 void loop() {
@@ -59,17 +60,18 @@ void loop() {
   if (counter == randsendback){
     Serial.println("Sending Temp and humidity");
     dht11.update();
-    C = dht11.readCelsius() + "C";
-    H = dht11.readHumidity() + "%";
-    Serial.println(C);
-    Serial.println(H);
+    C = dht11.readCelsius();
+    H = dht11.readHumidity();
     LoRa.beginPacket();
+    LoRa.print(NodeName);
     LoRa.print("NS");
     LoRa.print(C);
+    LoRa.print("C");
     LoRa.print(H);
+    LoRa.print("%");
     LoRa.endPacket();
     counter = 0;
-    randsendback = random(6000, 9000);
+    randsendback = random(60000, 90000);
   }
   else{
     counter++;
@@ -91,12 +93,14 @@ void loop() {
               delay(1);
               leds[0]= CRGB::Red;
               FastLED.show();
+              Serial.println("On");
               ledstate = 1;
             }
             else{
               delay(1);
               leds[0]= CRGB::Black;
               FastLED.show();
+              Serial.println("Off");
               ledstate = 0;
             }
             mode = 1;

@@ -2,7 +2,7 @@ from SX127x.LoRa import *
 from SX127x.board_config import BOARD
 import time
 import sys
-import requests
+#import requests
 
 """
 A function to simulate picking list from server, might change if using django frontend?
@@ -18,7 +18,7 @@ def lorainit():
     global lora
 
     BOARD.setup()
-    lora = LoRa()
+    lora = LoRa(verbose=False)
     lora.set_mode(MODE.STDBY)
     lora.set_freq(915.0) #set to 915MHz for SG use
 
@@ -89,12 +89,6 @@ def main():
             while (int(time.time()) != timeout):
                 dataget = reciever()
                 if dataget[0:2] == scannerin[0:2]:
-                    #add post request here
-                    payload = {
-                        "Name": scannerin[0:2],
-                        "Data": dataget[2:3]
-                    }
-                    r = requests.post("http://192.168.137.142:1880/LEDin", data=payload)
                     cfmflag = True
                     break
                 else:

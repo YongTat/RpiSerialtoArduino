@@ -33,7 +33,7 @@ def main():
                 pos = text.find("L")
                 payload = {
                             "Name": name,
-                            "Data": text[pos:pose+1]
+                            "Data": text[pos+1:pos+2]
                         }
                 r = requests.post("http://192.168.137.142:1880/LEDin", data=payload)
             
