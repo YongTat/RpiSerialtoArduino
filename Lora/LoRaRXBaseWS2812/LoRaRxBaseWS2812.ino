@@ -59,9 +59,10 @@ void loop() {
   if (counter == randsendback){
     Serial.println("Sending Temp and humidity");
     dht11.update();
-    C = dht11.readCelsius();
-    H = dht11.readHumidity();
+    C = dht11.readCelsius() + "C";
+    H = dht11.readHumidity() + "%";
     LoRa.beginPacket();
+    LoRa.print("NS");
     LoRa.print(C);
     LoRa.print(H);
     LoRa.endPacket();
@@ -107,6 +108,7 @@ void loop() {
       Serial.println("Sending Confirm ");
       LoRa.beginPacket();
       LoRa.print(NodeName);
+      LoRa.print("NL");
       LoRa.print(ledstate);
       LoRa.endPacket();
       incomingString = "";

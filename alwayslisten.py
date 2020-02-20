@@ -18,12 +18,25 @@ def main():
         payload = lora.read_payload(nocheck=True)
         if (payload != []):
             text = str(bytes(payload).decode("utf-8",'ignore'))
-            payload = {
-                "Name": text[0:2],
-                "Temp": text[2:4],
-                "Humidity": text[4:6]
-            }
-            r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
+            name = text[0:text.find("N")]
+
+            if (text.find("S") > 0):
+                pos = text.find("S")
+                payload = {
+                    "Name": name,
+                    "Temp": text[pos:pos+3],
+                    "Humidity": text[pos+3:pos+6]
+                }
+                r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
+
+            elif (text.find("L") > 0):
+                pos = text.find("L")
+                payload = {
+                            "Name": name,
+                            "Data": text[pos:pose+1]
+                        }
+                r = requests.post("http://192.168.137.142:1880/LEDin", data=payload)
+            
             payload = []
             lora.set_mode(MODE.SLEEP)
             lora.reset_ptr_rx()
@@ -32,3 +45,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#<Device Name>NL<LED State>
+#<Device Name>NS<Temp"C"><Humidity"%"">
