@@ -61,6 +61,8 @@ void loop() {
     dht11.update();
     C = dht11.readCelsius() + "C";
     H = dht11.readHumidity() + "%";
+    Serial.println(C);
+    Serial.println(H);
     LoRa.beginPacket();
     LoRa.print("NS");
     LoRa.print(C);

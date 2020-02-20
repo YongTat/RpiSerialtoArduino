@@ -24,8 +24,8 @@ def main():
                 pos = text.find("S")
                 payload = {
                     "Name": name,
-                    "Temp": text[pos:pos+3],
-                    "Humidity": text[pos+3:pos+6]
+                    "Temp": text[pos+1:pos+4],
+                    "Humidity": text[pos+4:pos+7]
                 }
                 r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
 
