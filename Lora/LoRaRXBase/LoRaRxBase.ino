@@ -105,7 +105,7 @@ void loop() {
       break;
     }
     case 1: {
-      delay(10);
+      delay(1);
       Serial.println("Sending Confirm ");
       LoRa.beginPacket();
       LoRa.print(NodeName);
