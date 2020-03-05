@@ -29,7 +29,7 @@
 #include <SPI.h>
 #include <LoRa.h>
 
-String NodeName = "A4";
+String NodeName = "A5";
 String incomingString = "";
 int mode = 0;
 int ledstate = 0;
@@ -71,7 +71,6 @@ void loop() {
     LoRa.print("%");
     LoRa.endPacket();
     counter = 0;
-    randsendback = random(60000, 90000);
   }
   else{
     counter++;
