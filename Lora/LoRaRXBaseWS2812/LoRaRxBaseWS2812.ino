@@ -51,6 +51,7 @@ void setup() {
     while (1);
   }
   FastLED.addLeds<WS2812, 5, BRG>(leds, NUM_LEDS);
+  randomSeed(analogRead(0));
   randsendback = random(60000, 90000);
   Serial.println(randsendback);
 }
