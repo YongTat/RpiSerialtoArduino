@@ -69,13 +69,13 @@ def listenmode():
         payload = lora.read_payload(nocheck=True)
         if (payload != []):
             text = str(bytes(payload).decode("utf-8",'ignore'))
-            name = text[0:text.find("N")]
-
+            # name = text[0:text.find("N")]
             if (text.find("S") > 0):
                 pos = text.find("S")
-                id = (int(text[1:pos])-1) / 4
-                print(id)
-                field = (int(text[1:pos])-1) % 4
+                id = int(text[1:pos-1])
+                channelid = int((id-1) / 4)
+                fieldid = int((id-1) % 4)
+                field = fieldnumber.get(fieldid)
                 # payload = {
                 #     "Name": name,
                 #     "Temp": text[pos+1:pos+4],
@@ -83,7 +83,7 @@ def listenmode():
                 # }
                 # r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
                 payload = {
-                    "api_key": thingsspeakapikeys.get(id),
+                    "api_key": thingsspeakapikeys.get(channelid),
                     field[0]: text[pos+1:pos+3],
                     field[1]: text[pos+4:pos+6],
                 }
