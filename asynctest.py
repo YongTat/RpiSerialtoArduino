@@ -69,7 +69,7 @@ def listenmode():
         payload = lora.read_payload(nocheck=True)
         if (payload != []):
             text = str(bytes(payload).decode("utf-8",'ignore'))
-            # name = text[0:text.find("N")]
+            name = text[0:text.find("N")]
             if (text.find("S") > 0):
                 pos = text.find("S")
                 id = int(text[1:pos-1])
@@ -87,7 +87,7 @@ def listenmode():
                     field[0]: text[pos+1:pos+3],
                     field[1]: text[pos+4:pos+6],
                 }
-                r = requests.post("https://api.thingspeak.com/update.json", data=payload)
+                requests.post("https://api.thingspeak.com/update.json", data=payload)
 
             elif (text.find("L") > 0):
                 pos = text.find("L")
@@ -95,13 +95,13 @@ def listenmode():
                             "Name": name,
                             "Data": text[pos+1:pos+2]
                         }
-                r = requests.post("http://localhost:1880/LEDin", data=payload)
+                requests.post("http://localhost:1880/LEDin", data=payload)
             
             payload = []
             lora.set_mode(MODE.SLEEP)
             lora.reset_ptr_rx()
             lora.set_mode(MODE.RXCONT)
-        time.sleep(0.1)
+        time.sleep(0.05)
 
 def main():
     lorainit()
