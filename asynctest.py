@@ -4,6 +4,11 @@ import multiprocessing
 import time
 import requests
 
+#thingsboard link 129.126.163.157/api/v1/{accesstoken}/telemetry json=payload
+thingsboardtoken = {
+    1: "pfsQZOaRJRo23Jhf0LO2"
+}
+
 thingsspeakapikeys = {
     "A5": "5J9C9RM334D695X3",
     "A4": "1J14O7KG9I2JB7GY",
@@ -76,18 +81,29 @@ def listenmode():
                 channelid = int((id-1) / 4)
                 fieldid = int((id-1) % 4)
                 field = fieldnumber.get(fieldid)
+
+                #Update Node-red via POST
                 # payload = {
                 #     "Name": name,
                 #     "Temp": text[pos+1:pos+4],
                 #     "Humidity": text[pos+4:pos+7]
                 # }
                 # r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
+
+                #Update ThingsSpeak via POST
                 payload = {
                     "api_key": thingsspeakapikeys.get(channelid),
                     field[0]: text[pos+1:pos+3],
                     field[1]: text[pos+4:pos+6],
                 }
                 requests.post("https://api.thingspeak.com/update.json", data=payload)
+
+                #Update ThingsBoard via POST
+                # payload = {
+                #     "Temperature": text[pos+1:pos+3],
+                #     "Humidity": text[pos+4:pos+6]
+                # }
+                #requests.post("http://129.126.163.157/api/v1/{}/telemetry".format(thingsboardtoken[id-1]), json=payload)
 
             elif (text.find("L") > 0):
                 pos = text.find("L")
