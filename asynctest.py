@@ -3,6 +3,8 @@ from SX127x.board_config import BOARD
 import multiprocessing
 import time
 import requests
+import sqlite3
+from datetime import datetime
 
 #thingsboard link 129.126.163.157/api/v1/{accesstoken}/telemetry json=payload
 thingsboardtoken = {
@@ -68,7 +70,7 @@ def sender(asciiin):
 """
 Listening mode for when you are not sending packets.
 """
-def listenmode():
+def listenmode(conn, c):
     lora.set_mode(MODE.RXCONT) #Switch to recieve modes
     while True:
         payload = lora.read_payload(nocheck=True)
@@ -77,10 +79,10 @@ def listenmode():
             name = text[0:text.find("N")]
             if (text.find("S") > 0):
                 pos = text.find("S")
-                id = int(text[1:pos-1])
-                channelid = int((id-1) / 4)
-                fieldid = int((id-1) % 4)
-                field = fieldnumber.get(fieldid)
+                # id = int(text[1:pos-1])
+                # channelid = int((id-1) / 4)
+                # fieldid = int((id-1) % 4)
+                # field = fieldnumber.get(fieldid)
 
                 #Update Node-red via POST
                 # payload = {
@@ -91,12 +93,13 @@ def listenmode():
                 # r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
 
                 #Update ThingsSpeak via POST
-                payload = {
-                    "api_key": thingsspeakapikeys.get(channelid),
-                    field[0]: text[pos+1:pos+3],
-                    field[1]: text[pos+4:pos+6],
-                }
-                requests.post("https://api.thingspeak.com/update.json", data=payload)
+
+                # payload = {
+                #     "api_key": thingsspeakapikeys.get(channelid),
+                #     field[0]: text[pos+1:pos+3],
+                #     field[1]: text[pos+4:pos+6],
+                # }
+                # requests.post("https://api.thingspeak.com/update.json", data=payload)
 
                 #Update ThingsBoard via POST
                 # payload = {
@@ -104,6 +107,15 @@ def listenmode():
                 #     "Humidity": text[pos+4:pos+6]
                 # }
                 #requests.post("http://129.126.163.157/api/v1/{}/telemetry".format(thingsboardtoken[id-1]), json=payload)
+
+                #Write data to local DB
+                temp = int(text[pos+1:pos+3])
+                humid = int(text[pos+4:pos+6])
+                now = datetime.now()
+                dt_string = dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                with conn:
+                    c.execute("INSERT INTO {} VALUES (?,?,?)".format(name),(dt_string,temp,humid))
+
 
             elif (text.find("L") > 0):
                 pos = text.find("L")
@@ -121,8 +133,10 @@ def listenmode():
 
 def main():
     lorainit()
+    conn = sqlite3.connect("sensor.db")
+    c = conn.cursor()
     while True:
-        p1 = multiprocessing.Process(target=listenmode)
+        p1 = multiprocessing.Process(target=listenmode, args=(conn,c))
         p1.start()
         userin = input("Enter: ")
         p1.terminate()
