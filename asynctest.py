@@ -7,24 +7,24 @@ import sqlite3
 from datetime import datetime
 
 #thingsboard link 129.126.163.157/api/v1/{accesstoken}/telemetry json=payload
-thingsboardtoken = {
-    1: "pfsQZOaRJRo23Jhf0LO2"
-}
+# thingsboardtoken = {
+#     1: "pfsQZOaRJRo23Jhf0LO2"
+# }
 
-thingsspeakapikeys = {
-    "A5": "5J9C9RM334D695X3",
-    "A4": "1J14O7KG9I2JB7GY",
-    "0" : "K0GBV7LQY0FWSWNB",
-    "1" : "5WYCGS9GF263QFO4"
-}
+# thingsspeakapikeys = {
+#     "A5": "5J9C9RM334D695X3",
+#     "A4": "1J14O7KG9I2JB7GY",
+#     "0" : "K0GBV7LQY0FWSWNB",
+#     "1" : "5WYCGS9GF263QFO4"
+# }
 
-fieldnumber = {
-    "1" : ["field1", "field2"],
-    "2" : ["field3", "field4"],
-    "3" : ["field5", "field6"],
-    "4" : ["field7", "field8"]
+# fieldnumber = {
+#     "1" : ["field1", "field2"],
+#     "2" : ["field3", "field4"],
+#     "3" : ["field5", "field6"],
+#     "4" : ["field7", "field8"]
 
-}
+# }
 
 def lorainit():
     global lora
@@ -32,7 +32,7 @@ def lorainit():
     BOARD.setup()
     lora = LoRa(verbose=False)
     lora.set_mode(MODE.STDBY)
-    lora.set_freq(915.0) #set to 915MHz for SG use
+    lora.set_freq(923.0) #set to 915MHz for SG use
 
 """
 Takes in a list in the format [data, data, data, ...] and converts
@@ -70,8 +70,10 @@ def sender(asciiin):
 """
 Listening mode for when you are not sending packets.
 """
-def listenmode(conn, c):
+def listenmode():
     lora.set_mode(MODE.RXCONT) #Switch to recieve modes
+    conn = sqlite3.connect("sensor.db")
+    c = conn.cursor()
     while True:
         payload = lora.read_payload(nocheck=True)
         if (payload != []):
@@ -116,14 +118,14 @@ def listenmode(conn, c):
                 with conn:
                     c.execute("INSERT INTO {} VALUES (?,?,?)".format(name),(dt_string,temp,humid))
 
-
-            elif (text.find("L") > 0):
-                pos = text.find("L")
-                payload = {
-                            "Name": name,
-                            "Data": text[pos+1:pos+2]
-                        }
-                requests.post("http://localhost:1880/LEDin", data=payload)
+            # For updating of LED Status on NODE-RED
+            # elif (text.find("L") > 0):
+            #     pos = text.find("L")
+            #     payload = {
+            #                 "Name": name,
+            #                 "Data": text[pos+1:pos+2]
+            #             }
+            #     requests.post("http://localhost:1880/LEDin", data=payload)
             
             payload = []
             lora.set_mode(MODE.SLEEP)
@@ -133,8 +135,6 @@ def listenmode(conn, c):
 
 def main():
     lorainit()
-    conn = sqlite3.connect("sensor.db")
-    c = conn.cursor()
     while True:
         p1 = multiprocessing.Process(target=listenmode, args=(conn,c))
         p1.start()
