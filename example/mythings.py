@@ -40,7 +40,7 @@ class FakeTempSensor(Thing):
         logging.debug('starting the sensor update looping task')
         self.timer = tornado.ioloop.PeriodicCallback(
             self.update_level,
-            10000
+            60000
         )
         self.timer.start()
 
@@ -92,7 +92,7 @@ class FakeHumidSensor(Thing):
         logging.debug('starting the sensor update looping task')
         self.timer = tornado.ioloop.PeriodicCallback(
             self.update_level,
-            10000
+            60000
         )
         self.timer.start()
 
@@ -114,14 +114,16 @@ class FakeHumidSensor(Thing):
 
 def run_server():
     # Create a thing that represents a humidity sensor
-    tempsensor1 = FakeTempSensor("A1")
-    humidsensor1 = FakeHumidSensor("A1")
-    tempsensor2 = FakeTempSensor("A2")
-    humidsensor2 = FakeHumidSensor("A2")
+    # tempsensor1 = FakeTempSensor("A1")
+    # humidsensor1 = FakeHumidSensor("A1")
+    # tempsensor2 = FakeTempSensor("A2")
+    # humidsensor2 = FakeHumidSensor("A2")
+    tempsensor10 = FakeTempSensor("A10")
+    humidsensor10 = FakeHumidSensor("A10")
 
     # If adding more than one thing, use MultipleThings() with a name.
     # In the single thing case, the thing's name will be broadcast.
-    server = WebThingServer(MultipleThings([tempsensor1, humidsensor1, tempsensor2, humidsensor2],
+    server = WebThingServer(MultipleThings([tempsensor10, humidsensor10],
                                            'TempandHumidDevice'),
                             port=8888)
     try:
@@ -129,10 +131,12 @@ def run_server():
         server.start()
     except KeyboardInterrupt:
         logging.debug('canceling the sensor update looping task')
-        tempsensor1.cancel_update_level_task()
-        humidsensor1.cancel_update_level_task()
-        tempsensor2.cancel_update_level_task()
-        humidsensor2.cancel_update_level_task()
+        # tempsensor1.cancel_update_level_task()
+        # humidsensor1.cancel_update_level_task()
+        # tempsensor2.cancel_update_level_task()
+        # humidsensor2.cancel_update_level_task()
+        tempsensor10.cancel_update_level_task()
+        humidsensor10.cancel_update_level_task()
         logging.info('stopping the server')
         server.stop()
         logging.info('done')
