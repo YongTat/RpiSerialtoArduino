@@ -80,7 +80,7 @@ def listenmode():
         if (payload != []):
             text = str(bytes(payload).decode("utf-8",'ignore'))
             name = text[0:text.find("N")]
-            if (pattern.match(x):):
+            if (pattern.match(x)):
                 if (text.find("S") > 0):
                     pos = text.find("S")
                     # id = int(text[1:pos-1])
