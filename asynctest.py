@@ -4,6 +4,7 @@ import multiprocessing
 import time
 import requests
 import sqlite3
+import re
 from datetime import datetime
 
 #thingsboard link 129.126.163.157/api/v1/{accesstoken}/telemetry json=payload
@@ -80,7 +81,7 @@ def listenmode():
         if (payload != []):
             text = str(bytes(payload).decode("utf-8",'ignore'))
             name = text[0:text.find("N")]
-            if (pattern.match(x)):
+            if (pattern.match(text)):
                 if (text.find("S") > 0):
                     pos = text.find("S")
                     # id = int(text[1:pos-1])
@@ -138,7 +139,7 @@ def listenmode():
 def main():
     lorainit()
     while True:
-        p1 = multiprocessing.Process(target=listenmode, args=(conn,c))
+        p1 = multiprocessing.Process(target=listenmode)
         p1.start()
         userin = input("Enter: ")
         p1.terminate()
