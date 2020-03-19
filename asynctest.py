@@ -74,58 +74,60 @@ def listenmode():
     lora.set_mode(MODE.RXCONT) #Switch to recieve modes
     conn = sqlite3.connect("sensor.db")
     c = conn.cursor()
+    pattern = re.compile(r"^([A][CNS0-9]+)+\%$")
     while True:
         payload = lora.read_payload(nocheck=True)
         if (payload != []):
             text = str(bytes(payload).decode("utf-8",'ignore'))
             name = text[0:text.find("N")]
-            if (text.find("S") > 0):
-                pos = text.find("S")
-                # id = int(text[1:pos-1])
-                # channelid = int((id-1) / 4)
-                # fieldid = int((id-1) % 4)
-                # field = fieldnumber.get(fieldid)
+            if (pattern.match(x):):
+                if (text.find("S") > 0):
+                    pos = text.find("S")
+                    # id = int(text[1:pos-1])
+                    # channelid = int((id-1) / 4)
+                    # fieldid = int((id-1) % 4)
+                    # field = fieldnumber.get(fieldid)
 
-                #Update Node-red via POST
-                # payload = {
-                #     "Name": name,
-                #     "Temp": text[pos+1:pos+4],
-                #     "Humidity": text[pos+4:pos+7]
-                # }
-                # r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
+                    #Update Node-red via POST
+                    # payload = {
+                    #     "Name": name,
+                    #     "Temp": text[pos+1:pos+4],
+                    #     "Humidity": text[pos+4:pos+7]
+                    # }
+                    # r = requests.post("http://192.168.137.142:1880/Sensorin", data=payload)
 
-                #Update ThingsSpeak via POST
+                    #Update ThingsSpeak via POST
 
-                # payload = {
-                #     "api_key": thingsspeakapikeys.get(channelid),
-                #     field[0]: text[pos+1:pos+3],
-                #     field[1]: text[pos+4:pos+6],
-                # }
-                # requests.post("https://api.thingspeak.com/update.json", data=payload)
+                    # payload = {
+                    #     "api_key": thingsspeakapikeys.get(channelid),
+                    #     field[0]: text[pos+1:pos+3],
+                    #     field[1]: text[pos+4:pos+6],
+                    # }
+                    # requests.post("https://api.thingspeak.com/update.json", data=payload)
 
-                #Update ThingsBoard via POST
-                # payload = {
-                #     "Temperature": text[pos+1:pos+3],
-                #     "Humidity": text[pos+4:pos+6]
-                # }
-                #requests.post("http://129.126.163.157/api/v1/{}/telemetry".format(thingsboardtoken[id-1]), json=payload)
+                    #Update ThingsBoard via POST
+                    # payload = {
+                    #     "Temperature": text[pos+1:pos+3],
+                    #     "Humidity": text[pos+4:pos+6]
+                    # }
+                    #requests.post("http://129.126.163.157/api/v1/{}/telemetry".format(thingsboardtoken[id-1]), json=payload)
 
-                #Write data to local DB
-                temp = int(text[pos+1:pos+3])
-                humid = int(text[pos+4:pos+6])
-                now = datetime.now()
-                dt_string = dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                with conn:
-                    c.execute("INSERT INTO {} VALUES (?,?,?)".format(name),(dt_string,temp,humid))
+                    #Write data to local DB
+                    temp = int(text[pos+1:pos+3])
+                    humid = int(text[pos+4:pos+6])
+                    now = datetime.now()
+                    dt_string = dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                    with conn:
+                        c.execute("INSERT INTO {} VALUES (?,?,?)".format(name),(dt_string,temp,humid))
 
-            # For updating of LED Status on NODE-RED
-            # elif (text.find("L") > 0):
-            #     pos = text.find("L")
-            #     payload = {
-            #                 "Name": name,
-            #                 "Data": text[pos+1:pos+2]
-            #             }
-            #     requests.post("http://localhost:1880/LEDin", data=payload)
+                # For updating of LED Status on NODE-RED
+                # elif (text.find("L") > 0):
+                #     pos = text.find("L")
+                #     payload = {
+                #                 "Name": name,
+                #                 "Data": text[pos+1:pos+2]
+                #             }
+                #     requests.post("http://localhost:1880/LEDin", data=payload)
             
             payload = []
             lora.set_mode(MODE.SLEEP)
