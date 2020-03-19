@@ -7,7 +7,7 @@ import sqlite3
 import re
 from datetime import datetime
 
-#thingsboard link 129.126.163.157/api/v1/{accesstoken}/telemetry json=payload
+#thingsboard link thingsboardip/api/v1/{accesstoken}/telemetry json=payload
 # thingsboardtoken = {
 #     1: "pfsQZOaRJRo23Jhf0LO2"
 # }
@@ -111,7 +111,7 @@ def listenmode():
                     #     "Temperature": text[pos+1:pos+3],
                     #     "Humidity": text[pos+4:pos+6]
                     # }
-                    #requests.post("http://129.126.163.157/api/v1/{}/telemetry".format(thingsboardtoken[id-1]), json=payload)
+                    #requests.post("http://thingsboardip/api/v1/{}/telemetry".format(thingsboardtoken[id-1]), json=payload)
 
                     #Write data to local DB
                     temp = int(text[pos+1:pos+3])
